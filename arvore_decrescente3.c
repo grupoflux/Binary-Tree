@@ -17,6 +17,12 @@ void inserir(struct folha **arvore, int valor){
 
         *arvore = nova_folha;
     }
+    else{
+        if (valor < atual -> valor)
+            inserir(&(atual -> esq), valor);
+        else
+            inserir(&(atual -> dir), valor);
+    }
 }
 
 void imprimir (struct folha *arvore){
@@ -40,12 +46,18 @@ int tamanho(struct folha *arvore){
 
 int main(){
     struct folha* raiz = NULL;
-    int num_entrada, valores[10], i;
+
+    inserir(&raiz, 10);
+    inserir(&raiz, 25);
+    inserir(&raiz, 67);
+    inserir(&raiz, 50);
+    inserir(&raiz, 2);
+    /*int num_entrada, valores[10], i;
     scanf("%d", &num_entrada);
     for (i=0; i<= num_entrada; i++){
         scanf("%d", &valores[i]);
         inserir(&raiz, valores[i]);
-    }
+    }*/
     imprimir(raiz);
     printf("tamanho:%d", tamanho(raiz));
     return(EXIT_SUCCESS);
