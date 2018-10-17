@@ -47,21 +47,16 @@ int tamanho(struct folha *arvore){
 int main(){
     struct folha* raiz = NULL;
 
-    inserir(&raiz, 10);
-    inserir(&raiz, 25);
-    inserir(&raiz, 67);
-    inserir(&raiz, 50);
-    inserir(&raiz, 2);
-    /*int num_entrada, valores[10], i;
-    scanf("%d", &num_entrada);
-    for (i=0; i<= num_entrada; i++){
+    int valores[100], i, cont;
+    scanf("%i", &cont);
+
+    for (i=0; i<cont; i++){
         scanf("%d", &valores[i]);
         inserir(&raiz, valores[i]);
-    }*/
-    imprimir(raiz);
-    printf("tamanho:%d", tamanho(raiz));
-    return(EXIT_SUCCESS);
-
-
+    }
+    while (valores != NULL){
+        imprimir(raiz);
+        printf("tamanho:%d", tamanho(raiz));
+    }
     return 0;
 }
