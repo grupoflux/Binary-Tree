@@ -48,8 +48,10 @@ int main(){
     struct folha* raiz = NULL;
 
     int valores[100], i, cont;
+    printf("Quantos valores deseja adicionar? ");
     scanf("%i", &cont);
 
+    printf("Adicione %i valores:\n", cont);
     for (i=0; i<cont; i++){
         scanf("%d", &valores[i]);
         inserir(&raiz, valores[i]);
