@@ -3,6 +3,7 @@
 
 struct folha{
     int valor;
+    int identidade;
     struct folha *esq;
     struct folha *dir;
 };
@@ -29,7 +30,7 @@ void imprimir (struct folha *arvore){
     struct folha* atual = arvore;
     if (atual != NULL){
         imprimir(atual -> dir);
-        printf("%d", atual -> valor);
+        printf("%d ", atual -> valor);
         imprimir(atual -> esq);
     }
 }
