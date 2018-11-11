@@ -432,7 +432,7 @@
   void inorderTraversal(struct rbNode *node) {
         if (node) {
                 inorderTraversal(node->link[0]);
-                printf("%d  ", node->data);
+                printf("%d ", node->data);
                 inorderTraversal(node->link[1]);
         }
         return;
