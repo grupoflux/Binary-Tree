@@ -1,5 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+
+
   enum nodeColor {
         RED,
         BLACK
@@ -463,8 +467,35 @@
         return;
   }
 
+
+
+  const char* getfield(char* line, int num)
+{
+    const char* tok;
+    for (tok = strtok(line, ",");
+            tok && *tok;
+            tok = strtok(NULL, ",\n"))
+    {
+        if (!--num)
+            return tok;
+    }
+    return NULL;
+}
+
   int main() {
         int ch, data;
+        
+        FILE* stream = fopen("ds.csv", "r");
+
+        char line[1024];
+        while (fgets(line, 1024, stream))
+        {
+                char* tmp = strdup(line);
+                printf("Field 0 would be %s\n", getfield(tmp, 1));
+                insertion(atoi(getfield(tmp, 1)));
+                free(tmp);
+        }
+        
         while (1) {
                 printf("1. Insertion\t2. Deletion\n");
                 printf("3. Searching\t4. Traverse\n");
