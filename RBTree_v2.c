@@ -539,65 +539,38 @@ int compare(const void * a, const void * b){
 
         printf(postArray);
 
-        while (1){
-                scanf("%d", &ch);
-                switch (ch) {
-                        case 2:
-                                printf("Enter the data to delete:");
-                                scanf("%d", &data);
-                                deletion(data);
-                                break;
-                        case 3:
-                                printf("Enter the search element:");
-                                scanf("%d", &data);
-                                searchElement(data);
-                                break;
-                        case 4:
-                                inorderTraversal(root);
-                                printf("\n");
-                                break;
-                        case 5:
-                                exit(0);
-                        default:
-                                printf("You have entered wrong option!!\n");
-                                break;
-                }
-                printf("\n");
-        }
+        CURL *curl;
+	CURLcode res;
 
-        // CURL *curl;
-	// CURLcode res;
+        curl_global_init(CURL_GLOBAL_ALL);
+	curl = curl_easy_init();
+	if (curl == NULL)
+	{
+		return 128;
+	}
+	char dest[12];
 
-        // curl_global_init(CURL_GLOBAL_ALL);
-	// curl = curl_easy_init();
-	// if (curl == NULL)
-	// {
-	// 	return 128;
-	// }
-	// char dest[12];
+	char *jsonObja = "rank=";
+	strcpy(dest, jsonObja);
+        strcpy(dest, postArray);
 
-	// char *jsonObja = "rank=";
-	// strcpy(dest, jsonObja);
-        // strcpy();
+	char *jsonObj = dest;
+	struct curl_slist *headers = NULL;
+	curl_slist_append(headers, "Accept: application/json");
+	curl_slist_append(headers, "Content-Type: application/json");
+	curl_slist_append(headers, "charsets: utf-8");
 
-	// char *jsonObj = dest;
-	// struct curl_slist *headers = NULL;
-	// curl_slist_append(headers, "Accept: application/json");
-	// curl_slist_append(headers, "Content-Type: application/json");
-	// curl_slist_append(headers, "charsets: utf-8");
+	curl_easy_setopt(curl, CURLOPT_URL, "https://postman-echo.com/post");
 
-	// curl_easy_setopt(curl, CURLOPT_URL, "https://postman-echo.com/post");
+	curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
+	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+	curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonObj);
+	curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, main);
+	res = curl_easy_perform(curl);
 
-	// curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
-	// curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-	// curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonObj);
-	// curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, main);
-	// res = curl_easy_perform(curl);
-
-	// curl_easy_cleanup(curl);
-	// curl_global_cleanup();
+	curl_easy_cleanup(curl);
+	curl_global_cleanup();
 
 
-        return 0;
   }
   
