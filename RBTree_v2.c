@@ -18,44 +18,46 @@
   */
 
   struct rbNode {
-        int data, color;        
-        char id[25], rank[1];        
+        int data, color;
+        float price;        
+        char rank[1];        
         struct rbNode *link[2];
   };
 
   struct rbNode *root = NULL;
 
-  struct rbNode *createNode(int data) {
+  struct rbNode *createNode(int data, float price) {
         struct rbNode *newnode;
         newnode = (struct rbNode *)malloc(sizeof(struct rbNode));
         newnode->data = data;
         newnode->color = RED;
+        newnode->price = price;
 
         //Inserção do rank padrão do cliente novo.
-        if (data < 5) {
+        if (price < 5) {
 
                 newnode->rank[0] = 'B';
 
-        } else if (data >= 5 && data < 10) {
+        } else if (price >= 5 && price < 10) {
 
-                newnode->rank[0] = 'S';
+                newnode->rank[0] = 'M';
 
         } else {
 
-                newnode->rank[0] = 'G';
-                
+                newnode->rank[0] = 'C';
+
         }
                 
         newnode->link[0] = newnode->link[1] = NULL;
         return newnode;
   }
 
-  void insertion (int data) {
+  void insertion (int data, float price) {
         struct rbNode *stack[98], *ptr, *newnode, *xPtr, *yPtr;
         int dir[98], ht = 0, index;
         ptr = root;
         if (!root) {
-                root = createNode(data);
+                root = createNode(data, price);
                 return;
         }
         stack[ht] = root;
@@ -72,7 +74,7 @@
                 dir[ht++] = index;
         }
         /* insert the new node */
-        stack[ht - 1]->link[index] = newnode = createNode(data);
+        stack[ht - 1]->link[index] = newnode = createNode(data, price);
         while ((ht >= 3) && (stack[ht - 1]->color == RED)) {
                 if (dir[ht - 2] == 0) {
                         yPtr = stack[ht - 2]->link[1];
@@ -461,7 +463,7 @@
   void inorderTraversal(struct rbNode *node) {
         if (node) {
                 inorderTraversal(node->link[0]);
-                printf("%d:%c  ", node->data, node->rank[0]); //(pontos do cliente:rank do cliente) //
+                printf("%d:%c:%f  ", node->data, node->rank[0], node->price); //(pontos do cliente:rank do cliente) //
                 inorderTraversal(node->link[1]);
         }
         return;
@@ -491,22 +493,16 @@
         while (fgets(line, 1024, stream))
         {
                 char* tmp = strdup(line);
-                printf("Field 0 would be %s\n", getfield(tmp, 1));
-                insertion(atoi(getfield(tmp, 1)));
+                insertion(atoi(getfield(tmp, 1)),atof(getfield(tmp, 2)));
                 free(tmp);
         }
         
         while (1) {
-                printf("1. Insertion\t2. Deletion\n");
+                printf("2. Deletion\n");
                 printf("3. Searching\t4. Traverse\n");
                 printf("5. Exit\nEnter your choice:");
                 scanf("%d", &ch);
                 switch (ch) {
-                        case 1:
-                                printf("Enter the data to insert:");
-                                scanf("%d", &data);
-                                insertion(data);
-                                break;
                         case 2:
                                 printf("Enter the data to delete:");
                                 scanf("%d", &data);
