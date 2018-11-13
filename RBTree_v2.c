@@ -13,7 +13,8 @@
   };
 
   struct rbNode {
-        int data, color, rank;        
+        int data, color, rank;
+        char id[25];        
         struct rbNode *link[2];
   };
 
@@ -24,7 +25,8 @@
         newnode = (struct rbNode *)malloc(sizeof(struct rbNode));
         newnode->data = data;
         newnode->color = RED;
-        newnode->rank = SILVER;
+        newnode->rank = BRONZE; //Inserção do rank padrão do cliente novo.
+        *newnode->id  = "22 A3"; //Inserção da ID do cliente. Não funcionou. Pesquisar.
         newnode->link[0] = newnode->link[1] = NULL;
         return newnode;
   }
@@ -440,7 +442,7 @@
   void inorderTraversal(struct rbNode *node) {
         if (node) {
                 inorderTraversal(node->link[0]);
-                printf("%d:%d  ", node->data, node->rank); //(pontos do cliente:rank do cliente) //
+                printf("%c:%d:%d  ", *node->id, node->data, node->rank); //(pontos do cliente:rank do cliente) //
                 inorderTraversal(node->link[1]);
         }
         return;
