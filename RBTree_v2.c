@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <curl/curl.h>
 
 
   enum nodeColor {
@@ -17,12 +18,12 @@
         'G' -> GOLD
   */
 
-  struct rbNode {
+  typedef struct rbNode {
         int data, color;
         float price;        
         char rank[1];        
         struct rbNode *link[2];
-  };
+  }tree;
 
   struct rbNode *root = NULL;
 
@@ -461,13 +462,31 @@
   }
 
   void inorderTraversal(struct rbNode *node) {
+        
         if (node) {
                 inorderTraversal(node->link[0]);
-                printf("%d:%c:%f  ", node->data, node->rank[0], node->price); //(pontos do cliente:rank do cliente) //
+               
                 inorderTraversal(node->link[1]);
         }
-        return;
   }
+
+  int AddToArray(tree *node, tree arr[], int i)
+{
+     if(node == NULL)
+          return i;
+
+
+     arr[i].data = node->data;
+     arr[i].price = node->price;
+
+     i++;
+     if(node->link[0] != NULL)
+          i = AddToArray(node->link[0], arr, i);
+     if(node->link[1] != NULL)
+          i = AddToArray(node->link[1], arr, i);
+
+     return i;
+}
 
 
 
@@ -484,9 +503,15 @@
     return NULL;
 }
 
-  int main() {
+int compare(const void * a, const void * b){
+    return ( *(int*)a - *(int*)b ); 
+}
+
+  int main(){
         int ch, data;
-        
+        tree arr[5];
+        char postArray[1000];
+
         FILE* stream = fopen("ds.csv", "r");
 
         char line[1024];
@@ -496,11 +521,25 @@
                 insertion(atoi(getfield(tmp, 1)),atof(getfield(tmp, 2)));
                 free(tmp);
         }
-        
-        while (1) {
-                printf("2. Deletion\n");
-                printf("3. Searching\t4. Traverse\n");
-                printf("5. Exit\nEnter your choice:");
+
+
+
+        AddToArray(root, arr, 0);
+        qsort(arr, 5, sizeof(arr[0]), compare);
+        for(int j = 0; j < 5; j++){        
+                char strData[42], strPrice[42];
+                strcat(postArray, "[");
+                snprintf(strData, 42, "%d", arr[j].data );
+                strcat(postArray, strData);
+                strcat(postArray, ",");
+                snprintf(strPrice, 42, "%f", arr[j].price);
+                strcat(postArray, strPrice); 
+                strcat(postArray, "],");
+        }
+
+        printf(postArray);
+
+        while (1){
                 scanf("%d", &ch);
                 switch (ch) {
                         case 2:
@@ -525,5 +564,40 @@
                 }
                 printf("\n");
         }
+
+        // CURL *curl;
+	// CURLcode res;
+
+        // curl_global_init(CURL_GLOBAL_ALL);
+	// curl = curl_easy_init();
+	// if (curl == NULL)
+	// {
+	// 	return 128;
+	// }
+	// char dest[12];
+
+	// char *jsonObja = "rank=";
+	// strcpy(dest, jsonObja);
+        // strcpy();
+
+	// char *jsonObj = dest;
+	// struct curl_slist *headers = NULL;
+	// curl_slist_append(headers, "Accept: application/json");
+	// curl_slist_append(headers, "Content-Type: application/json");
+	// curl_slist_append(headers, "charsets: utf-8");
+
+	// curl_easy_setopt(curl, CURLOPT_URL, "https://postman-echo.com/post");
+
+	// curl_easy_setopt(curl, CURLOPT_CUSTOMREQUEST, "POST");
+	// curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+	// curl_easy_setopt(curl, CURLOPT_POSTFIELDS, jsonObj);
+	// curl_easy_setopt(curl, CURLOPT_DEBUGFUNCTION, main);
+	// res = curl_easy_perform(curl);
+
+	// curl_easy_cleanup(curl);
+	// curl_global_cleanup();
+
+
         return 0;
   }
+  
