@@ -10,13 +10,6 @@
         BLACK
   };
 
-// Inserção do rank do cliente //
-  /*
-  Legenda do Rank:
-        'B' -> BRONZE
-        'S' -> SILVER
-        'G' -> GOLD
-  */
 
   typedef struct rbNode {
         int data, color;
