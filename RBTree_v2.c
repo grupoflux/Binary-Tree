@@ -26,14 +26,20 @@
         newnode = (struct rbNode *)malloc(sizeof(struct rbNode));
         newnode->data = data;
         newnode->color = RED;
-        
+
         //Inserção do rank padrão do cliente novo.
         if (data < 5) {
+
                 newnode->rank[0] = 'B';
+
         } else if (data >= 5 && data < 10) {
+
                 newnode->rank[0] = 'S';
+
         } else {
+
                 newnode->rank[0] = 'G';
+                
         }
                 
         newnode->link[0] = newnode->link[1] = NULL;
