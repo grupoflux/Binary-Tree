@@ -20,8 +20,9 @@ int main() {
     dados = fopen("teste.csv","a+");
 
     if (curl) {
+        
         curl_easy_setopt(curl, CURLOPT_URL, "https://m9963ywzsg.execute-api.us-east-1.amazonaws.com/default/queryInHouse?nome=Gustavo");
-        curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
+        
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, dados);
 
         #ifdef SKIP_PEER_VERIFICATION
