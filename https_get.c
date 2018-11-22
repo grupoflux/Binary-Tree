@@ -1,8 +1,11 @@
 # include <stdio.h>
+# include <string.h>
 # include <curl/curl.h>
 
 
 int main() {
+
+    char stream[1024], *virgula;
 
     CURL *curl;
     CURLcode res;
@@ -18,6 +21,7 @@ int main() {
 
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, "https://m9963ywzsg.execute-api.us-east-1.amazonaws.com/default/queryInHouse?nome=Gustavo");
+        curl_easy_setopt(curl, CURLOPT_HTTPGET, 1L);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, dados);
 
         #ifdef SKIP_PEER_VERIFICATION
@@ -29,6 +33,8 @@ int main() {
         #endif
 
         res = curl_easy_perform(curl);
+
+        fprintf(dados, "%s\n");
 
         if (res != CURLE_OK)
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
