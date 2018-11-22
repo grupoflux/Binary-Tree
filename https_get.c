@@ -1,18 +1,25 @@
 # include <stdio.h>
 # include <curl/curl.h>
 
+
 int main() {
 
     CURL *curl;
     CURLcode res;
 
+    FILE *dados;
+
+    
     curl_global_init(CURL_GLOBAL_DEFAULT);
 
     curl = curl_easy_init();
 
+    dados = fopen("teste.csv","a+");
+
     if (curl) {
         curl_easy_setopt(curl, CURLOPT_URL, "https://m9963ywzsg.execute-api.us-east-1.amazonaws.com/default/queryInHouse?nome=Gustavo");
-        
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, dados);
+
         #ifdef SKIP_PEER_VERIFICATION
             curl_easy_setopt(curl, CURLOPT_SSL_VERFYPEER, 0L);
         #endif
@@ -31,6 +38,8 @@ int main() {
 
     printf("\n");
     curl_global_cleanup();
+
+    fclose(dados);    
 
     return 0; 
 }
