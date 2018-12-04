@@ -12,15 +12,15 @@
 
 
   typedef struct rbNode {
-        int data, color;
+        int data, color, quantity;
         float price;        
-        char rank[1];        
+        char rank[1], product_name[50];                
         struct rbNode *link[2];
   }tree;
 
   struct rbNode *root = NULL;
 
-  struct rbNode *createNode(int data, float price) {
+  struct rbNode *createNode(int data, float price, int quantity, char *product_name) {
         struct rbNode *newnode;
         newnode = (struct rbNode *)malloc(sizeof(struct rbNode));
         newnode->data = data;
@@ -46,12 +46,12 @@
         return newnode;
   }
 
-  void insertion (int data, float price) {
+  void insertion (int data, float price, int quantity, char *product_name) {
         struct rbNode *stack[98], *ptr, *newnode, *xPtr, *yPtr;
         int dir[98], ht = 0, index;
         ptr = root;
         if (!root) {
-                root = createNode(data, price);
+                root = createNode(data, price, quantity, product_name);
                 return;
         }
         stack[ht] = root;
@@ -68,7 +68,7 @@
                 dir[ht++] = index;
         }
         /* insert the new node */
-        stack[ht - 1]->link[index] = newnode = createNode(data, price);
+        stack[ht - 1]->link[index] = newnode = createNode(data, price, quantity, product_name);
         while ((ht >= 3) && (stack[ht - 1]->color == RED)) {
                 if (dir[ht - 2] == 0) {
                         yPtr = stack[ht - 2]->link[1];
@@ -469,8 +469,10 @@
           return i;
 
 
-     arr[i].data = node->data;
-     arr[i].price = node->price;
+     arr[i].data = node -> data;
+     arr[i].price = node -> price;
+     arr[i].quantity = node -> quantity;
+     arr[i].product_name[50] = node -> product_name[50];
 
      i++;
      if(node->link[0] != NULL)
@@ -511,7 +513,7 @@ int compare(const void * a, const void * b){
         while (fgets(line, 1024, stream))
         {
                 char* tmp = strdup(line);
-                insertion(atoi(getfield(tmp, 1)),atof(getfield(tmp, 2)));
+                insertion(atoi(getfield(tmp, 0)),atof(getfield(tmp, 3)), atoi(getfield(tmp, 2)), getfield(tmp, 1));
                 free(tmp);
         }
 
@@ -520,12 +522,15 @@ int compare(const void * a, const void * b){
         AddToArray(root, arr, 0);
         qsort(arr, 5, sizeof(arr[0]), compare);
         for(int j = 0; j < 5; j++){        
-                char strData[42], strPrice[42];
+                char strProductName[50], strQuantity[50], strPrice[50];//char strData[42], strPrice[42];
                 strcat(postArray, "[");
-                snprintf(strData, 42, "%d", arr[j].data );
-                strcat(postArray, strData);
+                snprintf(strProductName, 50, "%s", arr[j].product_name[50]);//snprintf(strData, 42, "%d", arr[j].data );
+                strcat(postArray, strProductName);//strcat(postArray, strData);
                 strcat(postArray, ",");
-                snprintf(strPrice, 42, "%f", arr[j].price);
+                snprintf(strQuantity, 50, "%d", arr[j].quantity);
+                strcat(postArray, strQuantity);
+                strcat(postArray, ",");
+                snprintf(strPrice, 50, "%f", arr[j].price);//snprintf(strPrice, 42, "%f", arr[j].price);
                 strcat(postArray, strPrice); 
                 strcat(postArray, "],");
         }

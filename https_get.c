@@ -5,8 +5,8 @@
 
 int main() {
 
-    char stream[1024], *virgula;
-
+    char linha[10000];    
+        
     CURL *curl;
     CURLcode res;
 
@@ -17,11 +17,13 @@ int main() {
 
     curl = curl_easy_init();
 
-    dados = fopen("teste.csv","a+");
+    dados = fopen("teste.csv","w");
 
     if (curl) {
         
         curl_easy_setopt(curl, CURLOPT_URL, "https://m9963ywzsg.execute-api.us-east-1.amazonaws.com/default/queryInHouse?nome=Gustavo");
+        
+        // recolhendo os dados dentro da URL
         
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, dados);
 
@@ -34,19 +36,20 @@ int main() {
         #endif
 
         res = curl_easy_perform(curl);
-
+                        
         fprintf(dados, "%s\n");
-
+                
         if (res != CURLE_OK)
             fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
         
         curl_easy_cleanup(curl);
     }
 
-    printf("\n");
+    
     curl_global_cleanup();
 
     fclose(dados);    
 
     return 0; 
 }
+
