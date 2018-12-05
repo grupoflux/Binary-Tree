@@ -14,18 +14,19 @@
   typedef struct rbNode {
         int data, color, quantity;
         float price;        
-        char rank[1], product_name[50];                
+        char rank[1];                
         struct rbNode *link[2];
   }tree;
 
   struct rbNode *root = NULL;
 
-  struct rbNode *createNode(int data, float price, int quantity, char *product_name) {
+  struct rbNode *createNode(int data, int quantity, float price) {
         struct rbNode *newnode;
         newnode = (struct rbNode *)malloc(sizeof(struct rbNode));
         newnode->data = data;
         newnode->color = RED;
         newnode->price = price;
+        newnode->quantity = quantity;
 
         //Inserção do rank padrão do cliente novo.
         if (price < 5) {
@@ -46,14 +47,17 @@
         return newnode;
   }
 
-  void insertion (int data, float price, int quantity, char *product_name) {
+  void insertion (int data, int quantity, float price) {
         struct rbNode *stack[98], *ptr, *newnode, *xPtr, *yPtr;
         int dir[98], ht = 0, index;
+        //printf("oi."); //breakpoint 1
         ptr = root;
         if (!root) {
-                root = createNode(data, price, quantity, product_name);
+                //printf("O problema está aqui."); // breakpoint 2
+                root = createNode(data, quantity, price);
                 return;
         }
+        //printf("crisis core.");
         stack[ht] = root;
         dir[ht++] = 0;
         /* find the place to insert the new node */
@@ -68,7 +72,7 @@
                 dir[ht++] = index;
         }
         /* insert the new node */
-        stack[ht - 1]->link[index] = newnode = createNode(data, price, quantity, product_name);
+        stack[ht - 1]->link[index] = newnode = createNode(data, quantity, price);
         while ((ht >= 3) && (stack[ht - 1]->color == RED)) {
                 if (dir[ht - 2] == 0) {
                         yPtr = stack[ht - 2]->link[1];
@@ -472,8 +476,7 @@
      arr[i].data = node -> data;
      arr[i].price = node -> price;
      arr[i].quantity = node -> quantity;
-     arr[i].product_name[50] = node -> product_name[50];
-
+     
      i++;
      if(node->link[0] != NULL)
           i = AddToArray(node->link[0], arr, i);
@@ -503,29 +506,34 @@ int compare(const void * a, const void * b){
 }
 
   int main(){
-        int ch, data;
+        int ch, data, quantity, price;
         tree arr[5];
         char postArray[1000];
 
         FILE* stream = fopen("ds.csv", "r");
 
+        while (fscanf(stream, "%d%*c%d%*c%d", &data, &quantity, &price) == 3) {
+                insertion(data, quantity, price);
+        }
+
+        /*
         char line[1024];
         while (fgets(line, 1024, stream))
         {
                 char* tmp = strdup(line);
-                insertion(atoi(getfield(tmp, 0)),atof(getfield(tmp, 3)), atoi(getfield(tmp, 2)), getfield(tmp, 1));
+                printf(tmp);                
+                insertion(atoi(getfield(tmp, 1)), atoi(getfield(tmp, 2)), atof(getfield(tmp, 3)));
                 free(tmp);
         }
-
-
-
+        */
+        
         AddToArray(root, arr, 0);
         qsort(arr, 5, sizeof(arr[0]), compare);
-        for(int j = 0; j < 5; j++){        
-                char strProductName[50], strQuantity[50], strPrice[50];//char strData[42], strPrice[42];
+        for(int j = 0; j < 3; j++){        
+                char strData[50], strQuantity[50], strPrice[50];//char strData[42], strPrice[42];
                 strcat(postArray, "[");
-                snprintf(strProductName, 50, "%s", arr[j].product_name[50]);//snprintf(strData, 42, "%d", arr[j].data );
-                strcat(postArray, strProductName);//strcat(postArray, strData);
+                snprintf(strData, 50, "%d", arr[j].data );
+                strcat(postArray, strData);
                 strcat(postArray, ",");
                 snprintf(strQuantity, 50, "%d", arr[j].quantity);
                 strcat(postArray, strQuantity);
@@ -569,6 +577,7 @@ int compare(const void * a, const void * b){
 	curl_easy_cleanup(curl);
 	curl_global_cleanup();
 
+        printf("\n");
 
   }
   
