@@ -243,7 +243,7 @@ int compare(const void * a, const void * b){
                 snprintf(strQuantity, 50, "%d", arr[j].quantity);
                 strcat(postArray, strQuantity);
                 strcat(postArray, ",");
-                snprintf(strPrice, 50, "%f", arr[j].price);
+                snprintf(strPrice, 50, "%.2f", arr[j].price);
                 strcat(postArray, strPrice); 
                 strcat(postArray, "],");
         }
